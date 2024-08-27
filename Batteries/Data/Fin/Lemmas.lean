@@ -46,14 +46,14 @@ theorem list_succ (n) : list (n+1) = 0 :: (list n).map Fin.succ := by
 theorem list_succ_last (n) : list (n+1) = (list n).map castSucc ++ [last n] := by
   rw [list_succ]
   induction n with
-  | zero => rfl
+  | zero => simp [list, last]
   | succ n ih =>
     rw [list_succ, List.map_cons castSucc, ih]
     simp [Function.comp_def, succ_castSucc]
 
 theorem list_reverse (n) : (list n).reverse = (list n).map rev := by
   induction n with
-  | zero => rfl
+  | zero => simp [list]
   | succ n ih =>
     conv => lhs; rw [list_succ_last]
     conv => rhs; rw [list_succ]
@@ -96,14 +96,12 @@ theorem foldl_eq_foldl_list (f : α → Fin n → α) (x) : foldl n f x = (list 
 
 /-! ### foldr -/
 
-unseal foldr.loop in
-theorem foldr_loop_zero (f : Fin n → α → α) (x) : foldr.loop n f ⟨0, Nat.zero_le _⟩ x = x :=
-  rfl
+theorem foldr_loop_zero (f : Fin n → α → α) (x) : foldr.loop n f ⟨0, Nat.zero_le _⟩ x = x := by
+  simp [foldr.loop]
 
-unseal foldr.loop in
 theorem foldr_loop_succ (f : Fin n → α → α) (x) (h : m < n) :
-    foldr.loop n f ⟨m+1, h⟩ x = foldr.loop n f ⟨m, Nat.le_of_lt h⟩ (f ⟨m, h⟩ x) :=
-  rfl
+    foldr.loop n f ⟨m+1, h⟩ x = foldr.loop n f ⟨m, Nat.le_of_lt h⟩ (f ⟨m, h⟩ x) := by
+  simp [foldr.loop]
 
 theorem foldr_loop (f : Fin (n+1) → α → α) (x) (h : m+1 ≤ n+1) :
     foldr.loop (n+1) f ⟨m+1, h⟩ x =
